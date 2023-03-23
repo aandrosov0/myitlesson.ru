@@ -2,11 +2,7 @@
 namespace App\Routing;
 
 class Route {
-	private string $route;
-	private array $parameters;
-	private $method;
-
-	public function __construct(string $route, array $parameters, callable $method) {
+	public function __construct(private string $route, private $method, private array $parameters = []) {
 		$this->route = $route;
 		$this->parameters = array_flip($parameters);
 		$this->method = $method;
