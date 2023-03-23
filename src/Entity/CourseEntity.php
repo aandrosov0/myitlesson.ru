@@ -24,7 +24,7 @@ class CourseEntity extends Entity {
 	#[ORM\ManyToMany(targetEntity: UserEntity::class, mappedBy: 'courses', cascade: ['persist'])]
 	private Collection $users;
 
-	#[ORM\OneToMany(targetEntity: ModuleEntity::class, mappedBy: 'course', cascade: ['persist'])]
+	#[ORM\OneToMany(targetEntity: ModuleEntity::class, mappedBy: 'course', cascade: ['persist', 'remove'], orphanRemoval: true)]
 	private Collection $modules;
 
 	public static function new(string $title, string $description, UserEntity $author) {

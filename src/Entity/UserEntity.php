@@ -9,17 +9,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'user')]
 class UserEntity extends Entity {
 	#[ORM\Column(type: 'string', length: 16)]
-	private string $username;
+	protected string $username;
 
 	#[ORM\Column(type: 'string', length: 32)]
-	private string $password;
+	protected string $password;
 
 	#[ORM\JoinTable(name: 'user_courses'), ORM\JoinColumn(name: 'user_id'), ORM\InverseJoinColumn(name: 'course_id')]
 	#[ORM\ManyToMany(targetEntity: CourseEntity::class, inversedBy: 'users', cascade: ['persist'])]
-	private Collection $courses;
+	protected Collection $courses;
 
-	#[ORM\OneToMany(targetEntity: CourseEntity::class, mappedBy: 'author', cascade: ['persist'])]
-	private Collection $authoredCourses;
+	#[ORM\OneToMany(targetEntity: CourseEntity::class, mappedBy: 'author', cascade: ['persist', 'remove'], orphanRemoval: true)]
+	protected Collection $authoredCourses;
 
 	public static function new(string $username, string $password) {
 		return (new UserEntity())
