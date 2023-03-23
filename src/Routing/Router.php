@@ -1,6 +1,9 @@
 <?php 
 namespace App\Routing;
 
+use App\Rendering\HTMLMessage;
+use App\Rendering\JSONMessage;
+
 class Router {
 	public function __construct(private array $getRoutes = [], private array $postRoutes = []){}
 
@@ -15,19 +18,37 @@ class Router {
 		return 'Page not found';
 	}
 
+	public function GET(Route $route) {
+		$this->getRoutes[] = $route;
+	}
+
+	public function POST(Route $route) {
+		$this->postRoutes[] = $route;
+	}
+
 	private function routesAnalyse(array $routes) {
 		$url = new URL($_SERVER['REQUEST_URI']);
 
 		foreach($routes as $route) {
-			$parametersDiff = array_diff_key($route->getParameters(), $url->getQuery()); 
+			$parametersDiff = array_keys($url->getQuery()) === array_keys($route->getParameters()); 
 
-			if($route->getRoute() != $url->getPath() || !empty($parametersDiff)) {
+			if($route->getRoute() != $url->getPath() || !$parametersDiff) {
 				continue;
+			} 
+
+			foreach($url->getQuery() as $key => $value) {
+				if(trim($value) == "" && $_SERVER['REQUEST_METHOD'] == 'POST') {
+					return new JSONMessage(['err' => "Entry '$key' is empty!", 'status_code' => JSONMessage::QUERY_EMPTY], 404);
+				} 
+				
+				if(trim($value) == "" && $_SERVER['REQUEST_METHOD'] == 'GET') {
+					return new HTMLMessage("Entry '$key' is empty!");
+				}
 			}
 
-			return call_user_func_array($route->getMethod(), $url->getQuery());
+			return call_user_func_array($route->getMethod(), array_values($url->getQuery()));
 		}
 
-		return 'Page not found!';
+		return new HTMLMessage('Page not found!', 404);
 	}
 }
