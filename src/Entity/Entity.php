@@ -60,7 +60,7 @@ abstract class Entity {
 
 	public function toArray(): array {
 		$classVars = get_class_vars($this::class);
-		
+
 		foreach(array_keys($classVars) as $key) {
 			$var = $this->$key;
 

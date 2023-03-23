@@ -12,20 +12,20 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'course')]
 class CourseEntity extends Entity {
 	#[ORM\Column(type: 'text', length: 64)]
-	private string $title;
+	protected string $title;
 
 	#[ORM\Column(type: 'text', length: 512)]
-	private string $description;
+	protected string $description;
 
 	#[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'authoredCourses', cascade: ['persist'])]
-	private UserEntity $author;
+	protected UserEntity $author;
 
 	#[ORM\JoinTable(name: 'user_courses')]
 	#[ORM\ManyToMany(targetEntity: UserEntity::class, mappedBy: 'courses', cascade: ['persist'])]
-	private Collection $users;
+	protected Collection $users;
 
 	#[ORM\OneToMany(targetEntity: ModuleEntity::class, mappedBy: 'course', cascade: ['persist', 'remove'], orphanRemoval: true)]
-	private Collection $modules;
+	protected Collection $modules;
 
 	public static function new(string $title, string $description, UserEntity $author) {
 		return (new CourseEntity())

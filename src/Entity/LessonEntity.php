@@ -8,13 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'lesson')]
 class LessonEntity extends Entity {
 	#[ORM\Column(type: 'string', length: 64)]
-	private string $title; 
+	protected string $title; 
 
 	#[ORM\Column(type: 'string')]
-	private string $content;
+	protected string $content;
 
 	#[ORM\ManyToOne(targetEntity: ModuleEntity::class, inversedBy: 'lessons', cascade: ['persist'])]
-	private ModuleEntity $module;
+	protected ModuleEntity $module;
 
 	public static function new(string $title, string $content, ModuleEntity $module) {
 		return (new LessonEntity())

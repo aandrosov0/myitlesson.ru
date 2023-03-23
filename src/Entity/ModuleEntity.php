@@ -12,16 +12,16 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'module')]
 class ModuleEntity extends Entity {
 	#[ORM\Column(type: 'string', length: 64)]
-	private string $title; 
+	protected string $title; 
 
 	#[ORM\Column(type: 'string')]
-	private string $content;
+	protected string $content;
 
 	#[ORM\ManyToOne(targetEntity: CourseEntity::class, inversedBy: 'modules', cascade: ['persist'])]
-	private CourseEntity $course;
+	protected CourseEntity $course;
 
-	#[ORM\OneToMany(targetEntity: LessonEntity::class, mappedBy: 'module', cascade: ['persist'])]
-	private Collection $lessons;
+	#[ORM\OneToMany(targetEntity: LessonEntity::class, mappedBy: 'module', cascade: ['persist', 'remove'])]
+	protected Collection $lessons;
 
 	public static function new(string $title, string $content, CourseEntity $course) {
 		return (new ModuleEntity())
