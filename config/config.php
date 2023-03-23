@@ -1,5 +1,6 @@
 <?php 
 define("APP_NAME", "BLOG");
+define('DEFAULT_TEMPLATES_DIR', __DIR__ . '/../templates');
 
 $dbParams = [
     'driver' => 'pdo_mysql',
