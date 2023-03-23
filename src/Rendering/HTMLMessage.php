@@ -2,6 +2,8 @@
 namespace App\Rendering;
 
 class HTMLMessage extends Message {
+	public const TEMPLATE_400 = DEFAULT_TEMPLATES_DIR . '/file_not_found.php';
+
     public function __construct(string $message, int $responseCode = 200) {
         parent::__construct($message, $responseCode, 'Content-Type: text/html; charset=utf-8');
     }
@@ -11,7 +13,7 @@ class HTMLMessage extends Message {
 
         if($this->responseCode >= 400) {
             ob_start();
-            require __DIR__ . '/../../templates/resource_not_found.php';
+            require HTMLMessage::TEMPLATE_400;
             $htmlContent = ob_get_contents();
             ob_end_clean();
             return $htmlContent;
