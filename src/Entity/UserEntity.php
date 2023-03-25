@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'user')]
 class UserEntity extends Entity {
+	public const PASSWORD_KEY = "ugao135%s89adla";
+
 	#[ORM\Column(type: 'string', length: 16)]
 	protected string $username;
 
