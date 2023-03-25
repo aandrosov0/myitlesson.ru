@@ -49,6 +49,10 @@ class Router {
 			return call_user_func_array($route->getMethod(), array_values($url->getQuery()));
 		}
 
-		return new HTMLMessage('Page not found!', 404);
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			return new JSONMessage(['err' => 'Page not found!', 'status_code' => JSONMessage::PAGE_NOT_FOUND], 404);
+		} else {
+			return new HTMLMessage('Page not found!', 404);
+		}
 	}
 }
