@@ -6,7 +6,7 @@ use App\Entity\UserEntity;
 use App\Rendering\JSONMessage;
 
 class CourseView {
-	public static function get($id) {
+	public static function get(int $id) {
 		$course = CourseEntity::getRepository()->find($id);
 
 		if(empty($course)) {
@@ -16,12 +16,12 @@ class CourseView {
 		return new JSONMessage($course->toArray());
 	}
 
-	public static function add($title, $description, $authorId) {
+	public static function add(string $title, string $description, string $authorId) {
 		$course = CourseEntity::getRepository()->findOneBy(['title' => $title]);
 		$author = UserEntity::find($authorId);
 
 		if(isset($course)) {
-			return new JSONMessage(['err' => "Course with title '$title' is already exists!", 'status_code' => JSONMessage::ALREADY_EXISTS], 404);
+			return new JSONMessage(['err' => "Course with title '$title' already exists!", 'status_code' => JSONMessage::ALREADY_EXISTS], 404);
 		} 
 
 		if(!isset($author)) {
@@ -38,7 +38,7 @@ class CourseView {
 		$course = CourseEntity::find($id);
 
 		if(!isset($course)) {
-			return new JSONMessage(['err' => "Course with id '$id' ins't exists!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+			return new JSONMessage(['err' => "Course with id '$id' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
 		}
 
 		CourseEntity::delete($course);
