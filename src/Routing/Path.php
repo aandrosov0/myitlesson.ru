@@ -2,8 +2,6 @@
 
 namespace App\Routing;
 
-use ArrayObject;
-
 class Path {
 	private array $entities = [];
 	private array $parameters = [];
