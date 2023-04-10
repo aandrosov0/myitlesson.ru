@@ -1,6 +1,7 @@
 <?php 
 namespace App\Entity;
 
+use App\Enums\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +15,10 @@ class UserEntity extends Entity {
 	protected string $username;
 
 	#[ORM\Column(type: 'string', length: 32)]
-	protected string $password;
+	private string $password;
+
+	#[ORM\Column(type: 'smallint', enumType: Role::class)]
+	protected Role|null $role;
 
 	#[ORM\JoinTable(name: 'user_courses'), ORM\JoinColumn(name: 'user_id'), ORM\InverseJoinColumn(name: 'course_id')]
 	#[ORM\ManyToMany(targetEntity: CourseEntity::class, inversedBy: 'users', cascade: ['persist'])]
@@ -23,10 +27,11 @@ class UserEntity extends Entity {
 	#[ORM\OneToMany(targetEntity: CourseEntity::class, mappedBy: 'author', cascade: ['persist', 'remove'], orphanRemoval: true)]
 	protected Collection $authoredCourses;
 
-	public static function new(string $username, string $password) {
+	public static function new(string $username, string $password, Role $role) {
 		return (new UserEntity())
 			->setUsername($username)
-			->setPassword($password);
+			->setPassword($password)
+			->setRole($role);
 	}
 
 	public function __construct() {
@@ -64,6 +69,15 @@ class UserEntity extends Entity {
     public function getAuthoredCourses() {
         return $this->authoredCourses;
     }
+
+	public function getRole() {
+		return $this->role;
+	}
+
+	public function setRole(Role $role) {
+		$this->role = $role;
+		return $this;
+	}
 
     public function setAuthoredCourses(Collection $authoredCourses) {
         $this->authoredCourses = $authoredCourses;
