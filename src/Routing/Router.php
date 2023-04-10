@@ -10,12 +10,10 @@ class Router {
 	public function route() {
 		switch($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
-				return $this->routesAnalyse($this->getRoutes);
+				return $this->routesAnalyse($this->getRoutes, $_GET);
 			case 'POST':
-				return $this->routesAnalyse($this->postRoutes);
+				return $this->routesAnalyse($this->postRoutes, $_POST);
 		}
-
-		return 'Page not found';
 	}
 
 	public function GET(Route $route) {
@@ -26,27 +24,40 @@ class Router {
 		$this->postRoutes[] = $route;
 	}
 
-	private function routesAnalyse(array $routes) {
+	private function routesAnalyse(array $routes, array $query) {
 		$url = new URL($_SERVER['REQUEST_URI']);
 
 		foreach($routes as $route) {
-			$parametersDiff = array_keys($url->getQuery()) === array_keys($route->getParameters()); 
+			$func = (new \ReflectionFunction($route->getMethod()));
 
-			if($route->getRoute() != $url->getPath() || !$parametersDiff) {
+			$parameterNames = [];
+			foreach($func->getParameters() as $parameter) {
+				$parameterNames[$parameter->getName()] = null;
+			}
+
+			$parametersDiff = array_diff_key($parameterNames, $query);
+
+			if(($route->getRoute() != $url->getPath()) || !empty($parametersDiff) || count($parameterNames) != count($query)) {
 				continue;
 			} 
 
-			foreach($url->getQuery() as $key => $value) {
-				if(trim($value) == "" && $_SERVER['REQUEST_METHOD'] == 'POST') {
-					return new JSONMessage(['err' => "Entry '$key' is empty!", 'status_code' => JSONMessage::QUERY_EMPTY], 404);
-				} 
-				
-				if(trim($value) == "" && $_SERVER['REQUEST_METHOD'] == 'GET') {
-					return new HTMLMessage("Entry '$key' is empty!");
+			if(!$route->isView()) {
+				foreach($query as $key => $value) {
+					if(trim($value) == "" && $_SERVER['REQUEST_METHOD'] == 'POST') {
+						return new JSONMessage(['err' => "Entry '$key' is empty!", 'status_code' => JSONMessage::QUERY_EMPTY], 404);
+					} 
+					
+					if(trim($value) == "" && $_SERVER['REQUEST_METHOD'] == 'GET') {
+						return new HTMLMessage("Entry '$key' is empty!");
+					}
 				}
 			}
+			
+			foreach($parameterNames as $name => $_) {
+				$parameterNames[$name] = $query[$name];
+			}
 
-			return call_user_func_array($route->getMethod(), array_values($url->getQuery()));
+			return $route->getMethod()(...$parameterNames);
 		}
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
