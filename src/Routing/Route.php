@@ -1,11 +1,11 @@
 <?php 
 namespace App\Routing;
 
+use Closure;
+
 class Route {
-	public function __construct(private string $route, private $method, private array $parameters = []) {
-		$this->route = $route;
-		$this->parameters = array_flip($parameters);
-		$this->method = $method;
+	public function __construct(private string $route, private $method, private bool $isView = false) {
+		$this->method = Closure::fromCallable($method);
 	}
 
     public function getRoute() {
@@ -17,21 +17,21 @@ class Route {
         return $this;
     }
 
-    public function getParameters() {
-        return $this->parameters;
-    }
-
-    public function setParameters(array $parameters) {
-        $this->parameters = $parameters;
-        return $this;
-    }
-
     public function getMethod() {
         return $this->method;
     }
 
     public function setMethod($method) {
         $this->method = $method;
+        return $this;
+    }
+
+    public function isView() {
+        return $this->isView;
+    }
+
+    public function setView(bool $isView) {
+        $this->isView = $isView;
         return $this;
     }
 }
