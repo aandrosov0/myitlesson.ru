@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 img {
     max-width: 100%;
 }
@@ -31,7 +35,7 @@ ul *  {
 .card {
     box-shadow: 1px 5px 20px black;
     width: 350px;
-    height: 480px;
+    min-height: 480px;
 }
 
 .border {
@@ -82,14 +86,10 @@ ul *  {
     padding: 45px;
 }
 
-.alerts {
-    width: 300px;
-    position: fixed;
-    z-index: 1;
-    right: 10px;
-}
-
 .alert {
+    width: 300px;
+    margin-left: auto;
+    margin-right: 0;
     transition: 0.5s;
     box-shadow: 1px 5px 20px black;
 }
