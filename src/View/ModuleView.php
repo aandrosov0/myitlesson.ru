@@ -35,6 +35,18 @@ class ModuleView {
 		return new JSONMessage(['id' => $module->getId()]);
 	}
 
+	public static function edit(int $id, string $title, string $content) {
+		$module = ModuleEntity::find($id);
+
+		if(!isset($module)) {
+			return new JSONMessage(['err' => "Module with id '$id' not found!", 'status_code' => JSONMessage::NOT_FOUND], 404);	
+		}
+
+		ModuleEntity::add($module->setTitle($title)->setContent($content));
+
+		return new JSONMessage([]);
+	}
+
 	public static function remove(int $id) {
 		$module = ModuleEntity::find($id);
 
