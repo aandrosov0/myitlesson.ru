@@ -1,6 +1,7 @@
 <?php 
 namespace App\View;
 
+use App\Enums\Role;
 use App\Entity\CourseEntity;
 use App\Entity\UserEntity;
 use App\Rendering\JSONMessage;
@@ -16,27 +17,48 @@ class UserView {
 		return new JSONMessage($user->toArray());
 	}
 
-	public static function add(string $username, string $password) {
+	public static function add(string $username, string $password, int $role) {
 		$user = UserEntity::getRepository()->findOneBy(['username' => $username]);
 
 		if(isset($user)) {
 			return new JSONMessage(['err' => "User with username '$username' already exists!", 'status_code' => JSONMessage::ALREADY_EXISTS], 404);
 		} 
 
-		$user = UserEntity::new($username, $password);
+		$user = UserEntity::new($username, $password, Role::from($role));
 		UserEntity::add($user);
 
 		return new JSONMessage(['id' => $user->getId()]);
 	}
 
-	public static function remove(string $username) {
-		$user = UserEntity::getRepository()->findOneBy(['username' => $username]);
+	public static function remove(int $id) {
+		$user = UserEntity::getRepository()->find($id);
 
 		if(!isset($user)) {
-			return new JSONMessage(['err' => "User with username '$username' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+			return new JSONMessage(['err' => "User with id '$id' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
 		}
 
 		UserEntity::delete($user);
+
+		return new JSONMessage([]);
+	}
+
+	public static function edit(int $id, string $username, string $password, int $role) {
+		$user = UserEntity::getRepository()->find($id);
+
+		if(!isset($user)) {
+			return new JSONMessage(['err' => "User with id '$id' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+		} 
+
+		$cmpUser = UserEntity::getRepository()->findOneBy(['username' => $username]);
+
+		if(isset($cmpUser) && $cmpUser !== $user) {
+			return new JSONMessage(['err' => "User with username '$username' already exists!", 'status_code' => JSONMessage::ALREADY_EXISTS], 404);
+		} 
+
+		$user->setUsername($username)
+			->setPassword(empty($password) ? $user->getPassword() : md5(sprintf(UserEntity::PASSWORD_KEY, $password)))
+			->setRole(Role::from($role));
+		UserEntity::add($user);
 
 		return new JSONMessage([]);
 	}
