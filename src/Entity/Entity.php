@@ -4,6 +4,7 @@ namespace App\Entity;
 use App;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityRepository;
 
 abstract class Entity {
 	#[ORM\Id, ORM\GeneratedValue]
@@ -43,7 +44,7 @@ abstract class Entity {
 		$entityManager->flush();
 	}
 
-    public static function getRepository() {
+    public static function getRepository(): EntityRepository {
         global $entityManager;
         return $entityManager->getRepository('App\Entity\\' . App\getOnlyClassName(static::class));
     }
