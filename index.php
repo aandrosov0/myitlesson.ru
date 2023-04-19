@@ -1,8 +1,8 @@
 <?php
 
 use App\Entity\CourseEntity;
-use App\Entity\ModuleEntity;
-use App\Entity\UserEntity;
+use App\Rendering\JSONMessage;
+use App\Rendering\Message;
 use App\Rendering\TemplateManager;
 use App\Routing\Route;
 use App\Routing\Router;
@@ -11,6 +11,9 @@ use App\View\CourseView;
 use App\View\ModuleView;
 use App\View\LessonView;
 use App\View\UserView;
+use App\View\TokenView;
+
+use function App\authUser;
 
 ini_set('display_errors', 1); 
 ini_set('display_startup_errors', 1); 
@@ -19,16 +22,17 @@ error_reporting(E_ALL);
 session_start();
 require_once __DIR__ . '/bootstrap.php';
 
-if(!isset($_SESSION['ID'])) {
-	$superUser = null;
-} else {
-	$superUser = UserEntity::getRepository()->find($_SESSION['ID']);
-}
+$superUser = authUser();
 
-if($_SERVER['REQUEST_URI'] != '/login' && $superUser == null) {
+if($superUser == null && $_SERVER['REQUEST_METHOD'] == 'GET' && $_SERVER['REQUEST_URI'] != '/login') {
 	header("Location: /login");
 	exit;
+} else if($superUser == null && $_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] != '/token/get') {
+	echo new JSONMessage(['err' => 'Token auth failed!', 'status_code' => Message::AUTH_ERROR]);
+	exit;
 }
+
+unset($_POST['token']);
 
 $router = new Router();
 
@@ -61,6 +65,7 @@ $router->GET(new Route('/course', function($id) {
 }));
 
 $router->POST(new Route('/login', [AuthView::class, 'login'], true));
+$router->POST(new Route('/token/get', [TokenView::class, 'get']));
 
 $router->POST(new Route('/user/get', [UserView::class, 'get']));
 $router->POST(new Route('/user/remove', [UserView::class, 'remove']));
