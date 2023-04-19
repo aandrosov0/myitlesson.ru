@@ -8,7 +8,7 @@ use App\Rendering\JSONMessage;
 
 class UserView {
 	public static function get(int $id) {
-		$user = UserEntity::getRepository()->find($id);
+		$user = UserEntity::find($id);
 
 		if(empty($user)) {
 			return new JSONMessage(['err' => "User with id $id not found!", 'status_code' => JSONMessage::NOT_FOUND], 404);
@@ -31,7 +31,7 @@ class UserView {
 	}
 
 	public static function remove(int $id) {
-		$user = UserEntity::getRepository()->find($id);
+		$user = UserEntity::find($id);
 
 		if(!isset($user)) {
 			return new JSONMessage(['err' => "User with id '$id' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
@@ -43,7 +43,7 @@ class UserView {
 	}
 
 	public static function edit(int $id, string $username, string $password, int $role) {
-		$user = UserEntity::getRepository()->find($id);
+		$user = UserEntity::find($id);
 
 		if(!isset($user)) {
 			return new JSONMessage(['err' => "User with id '$id' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
