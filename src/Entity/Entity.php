@@ -69,6 +69,10 @@ abstract class Entity {
 				$var = $this::getIds($var);
 			}
 
+			if(is_a($var, Entity::class)) {
+				$var = $var->getId();
+			}
+
 			$classVars[$key] = $var;
 		}
 
