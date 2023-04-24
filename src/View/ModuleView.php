@@ -4,6 +4,7 @@ namespace App\View;
 
 use App\Entity\ModuleEntity;
 use App\Entity\CourseEntity;
+use App\Entity\LessonEntity;
 use App\Rendering\JSONMessage;
 
 class ModuleView {
@@ -44,7 +45,7 @@ class ModuleView {
 
 		ModuleEntity::add($module->setTitle($title)->setContent($content));
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}
 
 	public static function remove(int $id) {
@@ -56,6 +57,44 @@ class ModuleView {
 
 		ModuleEntity::delete($module);
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}	
+
+	public static function addLesson(int $moduleId, int $lessonId) {
+		$module = ModuleEntity::find($moduleId);
+
+		if(!isset($module)) {
+			return new JSONMessage(['err' => "Module with id '$moduleId' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+		}
+
+		$lesson = LessonEntity::find($lessonId);
+
+		if(!isset($lesson)) {
+			return new JSONMessage(['err' => "Lesson with id '$lessonId' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+		}
+
+		$module->addLesson($lesson);
+		ModuleEntity::add($module);
+
+		return new JSONMessage();
+	}
+
+	public static function removeLesson(int $moduleId, int $lessonId) {
+		$module = ModuleEntity::find($moduleId);
+
+		if(!isset($module)) {
+			return new JSONMessage(['err' => "Module with id '$moduleId' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+		}
+
+		$lesson = LessonEntity::find($lessonId);
+
+		if(!isset($lesson)) {
+			return new JSONMessage(['err' => "Lesson with id '$lessonId' doesn't exist!", 'status_code' => JSONMessage::NOT_FOUND], 404);
+		}
+
+		$module->removeLesson($lesson);
+		ModuleEntity::add($module);
+
+		return new JSONMessage();
+	}
 }
