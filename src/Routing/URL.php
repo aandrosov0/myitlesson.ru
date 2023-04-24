@@ -25,8 +25,10 @@ class URL {
 		if(isset($url['scheme'])) {
 			$this->scheme = $url['scheme'];
 		}
-
-		$this->path = new Path($url['path']);
+		
+		if(isset($url['path'])) {
+			$this->path = new Path($url['path']);
+		}
 	}
 
     public function getPath() {
