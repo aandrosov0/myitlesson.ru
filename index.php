@@ -28,7 +28,7 @@ if($superUser == null && $_SERVER['REQUEST_METHOD'] == 'GET' && $_SERVER['REQUES
 	header("Location: /login");
 	exit;
 } else if($superUser == null && $_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] != '/token/get') {
-	echo new JSONMessage(['err' => 'Token auth failed!', 'status_code' => Message::AUTH_ERROR]);
+	echo new JSONMessage(['err' => 'Token auth failed!', 'status_code' => Message::AUTH_ERROR], 404);
 	exit;
 }
 
@@ -66,6 +66,9 @@ $router->GET(new Route('/course', function($id) {
 
 $router->POST(new Route('/login', [AuthView::class, 'login'], true));
 $router->POST(new Route('/token/get', [TokenView::class, 'get']));
+$router->POST(new Route('/', function() {
+	return new JSONMessage();
+}));
 
 $router->POST(new Route('/user/get', [UserView::class, 'get']));
 $router->POST(new Route('/user/remove', [UserView::class, 'remove']));
@@ -77,11 +80,15 @@ $router->POST(new Route('/user/removecourse', [UserView::class, 'removeCourse'])
 $router->POST(new Route('/course/get', [CourseView::class, 'get']));
 $router->POST(new Route('/course/remove', [CourseView::class, 'remove']));
 $router->POST(new Route('/course/add', [CourseView::class, 'add']));
+$router->POST(new Route('/course/addmodule', [CourseView::class, 'addModule']));
+$router->POST(new Route('/course/removemodule', [CourseView::class, 'removeModule']));
 
 $router->POST(new Route('/module/get', [ModuleView::class, 'get']));
 $router->POST(new Route('/module/edit', [ModuleView::class, 'edit']));
 $router->POST(new Route('/module/remove', [ModuleView::class, 'remove']));
 $router->POST(new Route('/module/add', [ModuleView::class, 'add']));
+$router->POST(new Route('/module/addlesson', [ModuleView::class, 'addLesson']));
+$router->POST(new Route('/module/removelesson', [ModuleView::class, 'removeLesson']));
 
 $router->POST(new Route('/lesson/get', [LessonView::class, 'get']));
 $router->POST(new Route('/lesson/remove', [LessonView::class, 'remove']));
