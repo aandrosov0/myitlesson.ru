@@ -33,7 +33,13 @@ class TokenView {
 
     public static function decryptToken(string $token) {
         $json = openssl_decrypt($token, TokenView::CIPHER_METHOD, TokenView::KEY, 0, TokenView::IV);
-        $id = json_decode($json, true)['id'];
+        $data = json_decode($json, true);
+
+        if(!isset($data['id'])) {
+            return null;
+        }
+
+        $id = $data['id'];
 
         return isset($id) ? UserEntity::find($id) : null;
     }
