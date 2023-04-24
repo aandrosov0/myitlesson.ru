@@ -6,8 +6,10 @@ class Path {
 	private array $entities = [];
 	private array $parameters = [];
 
-	public function __construct(string $path) {
-		$this->entities = explode('/', $path);
+	public function __construct(string $path = null) {
+		if(isset($path)) {
+			$this->entities = explode('/', $path);
+		}
 
 		for($i = 0; $i < count($this->entities); $i++) {
 			$entity = $this->entities[$i];
