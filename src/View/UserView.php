@@ -24,6 +24,10 @@ class UserView {
 			return new JSONMessage(['err' => "User with username '$username' already exists!", 'status_code' => JSONMessage::ALREADY_EXISTS], 404);
 		} 
 
+		if(strlen($password) < 8) {
+			return new JSONMessage(['err' => 'Password must be more than 8 characters', 'status_code' => JSONMessage::PASSWORD_LENGTH], 404);
+		}
+
 		$user = UserEntity::new($username, $password, Role::from($role));
 		UserEntity::add($user);
 
@@ -39,7 +43,7 @@ class UserView {
 
 		UserEntity::delete($user);
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}
 
 	public static function edit(int $id, string $username, string $password, int $role) {
@@ -60,7 +64,7 @@ class UserView {
 			->setRole(Role::from($role));
 		UserEntity::add($user);
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}
 
 	public static function addCourse(int $userId, int $courseId) {
@@ -83,7 +87,7 @@ class UserView {
 		$user->addCourse($course);
 		UserEntity::add($user);
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}
 
 	public static function removeCourse(int $userId, int $courseId) {
@@ -106,6 +110,6 @@ class UserView {
 		$user->removeCourse($course);
 		UserEntity::add($user);
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}
 }
