@@ -9,9 +9,23 @@ function getOnlyClassName(string $className) {
     return end($className);
 }
 
-function authUser() {
+function authUser(): UserEntity|null {
     return match($_SERVER['REQUEST_METHOD']) {
-        'POST' => isset($_POST['token']) ? TokenView::decryptToken($_POST['token']) : null,
+        'POST' => getTokenFromHeader(),
         'GET' => isset($_SESSION['ID']) ? UserEntity::find($_SESSION['ID']) : null,
     };
+}
+
+function getTokenFromHeader(): UserEntity|null {
+    $headers = getallheaders();
+
+    $header = key_exists('Authorization', $headers) ? $headers['Authorization'] : '';
+
+    if(!preg_match('/^Basic\s\w+\W*/', $header)) {
+        return null;
+    }
+
+    $words = explode(' ', $header, 2);
+
+    return TokenView::decryptToken($words[1]);
 }
