@@ -17,6 +17,16 @@ class CourseView {
 		return new JSONMessage($course->toArray());
 	}
 
+	public static function getAll(int $limit, int $offset) {
+		$courses = CourseEntity::getRepository()->findBy([], null, $limit, $offset);
+
+		for($i = 0; $i < count($courses); $i++) {
+			$courses[$i] = $courses[$i]->toArray();
+		}
+
+		return new JSONMessage($courses);
+	}
+
 	public static function add(string $title, string $description, string $authorId) {
 		$course = CourseEntity::getRepository()->findOneBy(['title' => $title]);
 		$author = UserEntity::find($authorId);

@@ -71,6 +71,7 @@ $router->POST(new Route('/', function() {
 }));
 
 $router->POST(new Route('/user/get', [UserView::class, 'get']));
+$router->POST(new Route('/user/getall', [UserView::class, 'getAll']));
 $router->POST(new Route('/user/remove', [UserView::class, 'remove']));
 $router->POST(new Route('/user/edit', [UserView::class, 'edit'], true));
 $router->POST(new Route('/user/add', [UserView::class, 'add']));
@@ -78,6 +79,7 @@ $router->POST(new Route('/user/addcourse', [UserView::class, 'addCourse']));
 $router->POST(new Route('/user/removecourse', [UserView::class, 'removeCourse']));
 
 $router->POST(new Route('/course/get', [CourseView::class, 'get']));
+$router->POST(new Route('/course/getall', [CourseView::class, 'getAll']));
 $router->POST(new Route('/course/remove', [CourseView::class, 'remove']));
 $router->POST(new Route('/course/add', [CourseView::class, 'add']));
 $router->POST(new Route('/course/addmodule', [CourseView::class, 'addModule']));

@@ -17,6 +17,16 @@ class UserView {
 		return new JSONMessage($user->toArray());
 	}
 
+	public static function getAll(int $limit, int $offset) {
+		$users = UserEntity::getRepository()->findBy([], null, $limit, $offset);
+
+		for($i = 0; $i < count($users); $i++) {
+			$users[$i] = $users[$i]->toArray();
+		}
+
+		return new JSONMessage($users);
+	}
+
 	public static function add(string $username, string $password, int $role) {
 		$user = UserEntity::getRepository()->findOneBy(['username' => $username]);
 
