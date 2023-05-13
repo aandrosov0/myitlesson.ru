@@ -28,7 +28,7 @@ if($superUser == null && $_SERVER['REQUEST_METHOD'] == 'GET' && $_SERVER['REQUES
 	header("Location: /login");
 	exit;
 } else if($superUser == null && $_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] != '/token/get') {
-	echo new JSONMessage(['err' => 'Token auth failed!', 'status_code' => Message::AUTH_ERROR], 404);
+	echo new JSONMessage(['err' => 'Token auth failed!', 'status_code' => Message::AUTH_ERROR], 401);
 	exit;
 }
 
