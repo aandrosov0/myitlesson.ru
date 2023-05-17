@@ -15,7 +15,7 @@ class TokenView {
         $user = UserEntity::getRepository()->findOneBy(['username' => $username]);
 
 		if(!isset($user)) {
-			return new JSONMessage(['err' => "User with username '$username' isn't found!", 'status_code' => Message::NOT_FOUND], 404);
+			return new JSONMessage(['err' => "User with username '$username' isn't found!", 'status_code' => Message::AUTH_ERROR], 404);
 		}
 
 		$password = md5(sprintf(UserEntity::PASSWORD_KEY, $password));
