@@ -1,6 +1,6 @@
-DirectoryIndex app/public/index.php
+DirectoryIndex public/index.php
 
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . app/public/index.php
+RewriteRule . public/index.php
