@@ -28,7 +28,7 @@ class TokenView {
 
         $data = openssl_encrypt($json, TokenView::CIPHER_METHOD, TokenView::KEY, 0, TokenView::IV);
 
-        return new JSONMessage(['token' => $data]);
+        return new JSONMessage(['token' => $data, 'id' => $user->getId()]);
     }
 
     public static function decryptToken(string $token) {
