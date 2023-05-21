@@ -92,4 +92,35 @@ class CourseView {
 		CourseEntity::add($course);
 		return new JSONMessage();
 	}
+
+	public static function imageSet(int $id) {
+		$file = isset($_FILES['image']) ?  $_FILES['image'] : null;
+
+		if(!isset($file)) {
+			return new JSONMessage(['err' => 'file not found!', 'status_code' => JSONMessage::NOT_FOUND], 404);
+		}
+
+		move_uploaded_file($file['tmp_name'], UPLOAD_DIR . "/course/$id.png");
+
+		return new JSONMessage();
+	}
+
+	public static function imageGet(int $id) {
+
+		$fileName = UPLOAD_DIR . "/course/$id.png";
+		
+		if(!file_exists($fileName)) {
+			return new JSONMessage(['err' => 'file not found!', 'status_code' => JSONMessage::NOT_FOUND], 404);
+		}
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.basename($fileName).'"');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($fileName));
+		readfile($fileName);
+		exit;
+	}
 }

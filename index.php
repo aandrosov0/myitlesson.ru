@@ -84,6 +84,8 @@ $router->POST(new Route('/course/remove', [CourseView::class, 'remove']));
 $router->POST(new Route('/course/add', [CourseView::class, 'add']));
 $router->POST(new Route('/course/addmodule', [CourseView::class, 'addModule']));
 $router->POST(new Route('/course/removemodule', [CourseView::class, 'removeModule']));
+$router->POST(new Route('/course/image/set', [CourseView::class, 'imageSet']));
+$router->POST(new Route('/course/image/get', [CourseView::class, 'imageGet']));
 
 $router->POST(new Route('/module/get', [ModuleView::class, 'get']));
 $router->POST(new Route('/module/edit', [ModuleView::class, 'edit']));
