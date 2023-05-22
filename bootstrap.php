@@ -27,7 +27,8 @@ if(!file_exists(UPLOAD_COURSE_DIR)) {
 
 $ormConfig = ORMSetup::createAttributeMetadataConfiguration(
 	paths: ["src/Entity"],
-	isDevMode: $isDevMode
+	isDevMode: $isDevMode,
+	proxyDir: __DIR__ . '/tmp'
 );
 
 $dbConnection = DriverManager::getConnection($dbParams, $ormConfig);
