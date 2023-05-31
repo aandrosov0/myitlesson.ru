@@ -43,6 +43,6 @@ class LessonView {
 
 		LessonEntity::delete($lesson);
 
-		return new JSONMessage([]);
+		return new JSONMessage();
 	}
 }

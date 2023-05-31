@@ -10,7 +10,7 @@ class LessonEntity extends Entity {
 	#[ORM\Column(type: 'string', length: 64)]
 	protected string $title; 
 
-	#[ORM\Column(type: 'string')]
+	#[ORM\Column(type: 'text')]
 	protected string $content;
 
 	#[ORM\ManyToOne(targetEntity: ModuleEntity::class, inversedBy: 'lessons', cascade: ['persist'])]
